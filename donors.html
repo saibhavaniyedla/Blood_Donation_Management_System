@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register as Donor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Register as Donor</h1>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="donors.html">Register as Donor</a>
+    <a href="request.html">Request Blood</a>
+    <a href="search.html">Search Donors</a>
+    <a href="quiz.html">Take Quiz</a>
+  </nav>
+
+  <section>
+    <h2>Donor Registration Form</h2>
+    <form id="donorForm">
+      <input type="text" id="donorName" placeholder="Full Name" required>
+      <input type="email" id="donorEmail" placeholder="Email Address" required>
+      <input type="number" id="donorAge" placeholder="Age" required>
+      <select id="donorBlood" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <input type="tel" id="donorPhone" placeholder="Phone Number" required pattern="[0-9]{10}">
+      <input type="text" id="donorLocation" placeholder="Location" required>
+      <button type="submit">Register</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 Blood Donation System</p>
+  </footer>
+
+  <script>
+    document.getElementById('donorForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('donorName').value.trim();
+      const email = document.getElementById('donorEmail').value.trim();
+      const age = parseInt(document.getElementById('donorAge').value, 10);
+      const blood_group = document.getElementById('donorBlood').value;
+      const phone = document.getElementById('donorPhone').value.trim();
+      const location = document.getElementById('donorLocation').value.trim();
+
+      if (age < 18) {
+        alert('⚠️ You must be at least 18 years old to donate blood.');
+        return;
+      }
+      if (!/^\d{10}$/.test(phone)) {
+        alert('⚠️ Phone number must be exactly 10 digits.');
+        return;
+      }
+
+      const donor = { name, email, age, blood_group, phone, location };
+
+      try {
+        const res = await fetch('http://localhost:5000/donors', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(donor)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ Donor Registered Successfully!');
+          document.getElementById('donorForm').reset();
+        } else {
+          alert(data.error || '❌ Registration failed.');
+        }
+      } catch (err) {
+        alert('❌ Registration failed. Please try again.');
+      }
+    });
+  </script>
+
+</body>
+</html>

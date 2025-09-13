@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+}
+
+header {
+  background: #b71c1c;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  background-image: url("images/1.jpg"); /* relative path */
+  background-size: cover;   /* cover the whole area */
+  background-position: center;
+  text-align: center;
+}
+
+nav {
+  background: #333;
+  padding: 10px;
+  text-align: center;
+}
+nav a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+
+section {
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0,0,0,0.2);
+}
+
+form input, form select, form button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  background: #b71c1c;
+  color: white;
+  cursor: pointer;
+}
+form button:hover {
+  background: #d32f2f;
+}
+
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: 100px;
+}
+.content {
+  margin: 20px auto;
+  padding: 20px 40px;
+  max-width: 900px;
+  text-align: left;
+  line-height: 1.6;
+}
+main {
+  min-height: 80vh;
+  margin-left: 25px;
+}
+h3
+{
+  color:#d32f2f
+}

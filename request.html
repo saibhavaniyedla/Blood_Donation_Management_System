@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request Blood</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Request Blood</h1>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="donors.html">Register as Donor</a>
+    <a href="request.html">Request Blood</a>
+    <a href="search.html">Search Donors</a>
+    <a href="quiz.html">Take Quiz</a>
+  </nav>
+
+  <section>
+    <h2>Blood Request Form</h2>
+    <form id="requestForm">
+      <input type="text" id="patientName" placeholder="Patient Name" required>
+      <input type="tel" id="patientPhone" placeholder="Contact Number" required>
+      <input type="text" id="patientLocation" placeholder="Hospital/Location" required>
+      <select id="patientBlood" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option>
+        <option>AB+</option><option>AB-</option>
+      </select>
+      <button type="submit">Submit Request</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 Blood Donation System</p>
+  </footer>
+
+  <script>
+    document.getElementById('requestForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('patientName').value.trim();
+      const phone = document.getElementById('patientPhone').value.trim();
+      const location = document.getElementById('patientLocation').value.trim();
+      const blood_group = document.getElementById('patientBlood').value;
+
+      const requestData = { name, phone, location, blood_group };
+
+      try {
+        const res = await fetch('http://localhost:5000/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestData)
+        });
+        const data = await res.json();
+        if (res.ok) {
+          alert("✅ Blood request submitted! Donors will be notified.");
+          document.getElementById('requestForm').reset();
+        } else {
+          alert(data.error || "Request failed.");
+        }
+      } catch (err) {
+        alert("Request failed.");
+      }
+    });
+  </script>
+</body>
+</html>

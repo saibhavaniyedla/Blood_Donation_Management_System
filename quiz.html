@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register as Donor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    body { font-family: Arial, sans-serif; background: #f4f4f9; text-align: center; }
+    .container { margin-top: 50px; }
+    button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+    .question-box { margin: 20px; font-size: 18px; }
+    .score-box { font-size: 20px; margin-top: 20px; font-weight: bold; }
+    .timer { font-size: 18px; color: red; margin: 10px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Register as Donor</h1>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="donors.html">Register as Donor</a>
+    <a href="request.html">Request Blood</a>
+    <a href="search.html">Search Donors</a>
+    <a href="quiz.html">Take Quiz</a>
+  </nav>
+<body>
+  <div class="container">
+    <h1>Blood Donation Quiz</h1>
+
+    <!-- Level Selection -->
+    <div id="levelSelect">
+      <h2>Select Difficulty Level</h2>
+      <button onclick="startQuiz('easy')">Easy</button>
+      <button onclick="startQuiz('medium')">Medium</button>
+      <button onclick="startQuiz('hard')">Hard</button>
+    </div>
+
+    <!-- Quiz Area -->
+    <div id="quizArea" class="hidden">
+      <div class="timer" id="timer">Time Left: 10s</div>
+      <div class="question-box" id="question"></div>
+      <div id="options"></div>
+    </div>
+
+    <!-- Result -->
+    <div id="result" class="hidden score-box"></div>
+  </div>
+
+  <script>
+    const questionBank = {
+      easy: [
+        { q: "What is the universal donor blood type?", a: "O-", options: ["O-", "A+", "B+", "AB+"] },
+        { q: "How often can you donate whole blood?", a: "3 months", options: ["1 week", "1 month", "3 months", "6 months"] },
+        { q: "Which organ pumps blood?", a: "Heart", options: ["Lungs", "Heart", "Kidneys", "Brain"] },
+        { q: "Which component carries oxygen?", a: "Red blood cells", options: ["White blood cells", "Platelets", "Plasma", "Red blood cells"] },
+        { q: "What does blood transport?", a: "All of these", options: ["Oxygen", "Nutrients", "Waste", "All of these"] }
+      ],
+      medium: [
+        { q: "Which blood type is universal recipient?", a: "AB+", options: ["O-", "A-", "AB+", "B+"] },
+        { q: "What is the main function of platelets?", a: "Clotting", options: ["Transport", "Clotting", "Immunity", "Digestion"] },
+        { q: "How much blood is taken during donation?", a: "350-450 ml", options: ["100 ml", "200 ml", "350-450 ml", "1 liter"] },
+        { q: "Plasma makes up what % of blood?", a: "55%", options: ["25%", "40%", "55%", "70%"] },
+        { q: "Which vitamin is essential for clotting?", a: "Vitamin K", options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin K"] }
+      ],
+      hard: [
+        { q: "Which blood group has no antigens?", a: "O-", options: ["O-", "A+", "B-", "AB+"] },
+        { q: "Which protein carries oxygen in blood?", a: "Hemoglobin", options: ["Insulin", "Hemoglobin", "Albumin", "Keratin"] },
+        { q: "Average adult has how many liters of blood?", a: "5 liters", options: ["2 liters", "3 liters", "5 liters", "7 liters"] },
+        { q: "Blood pH is normally around?", a: "7.4", options: ["6.5", "7.0", "7.4", "8.0"] },
+        { q: "Which blood cell fights infection?", a: "White blood cells", options: ["Platelets", "White blood cells", "Red blood cells", "Plasma"] }
+      ]
+    };
+
+    let questions = [], score = 0, index = 0, timer;
+    const timeLimit = 10;
+
+    function startQuiz(level) {
+      score = 0;
+      index = 0;
+      questions = [...questionBank[level]].sort(() => Math.random() - 0.5); // shuffle questions
+      document.getElementById("levelSelect").classList.add("hidden");
+      document.getElementById("quizArea").classList.remove("hidden");
+      document.getElementById("result").classList.add("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (index >= questions.length) return endQuiz();
+
+      let qObj = questions[index];
+      document.getElementById("question").innerText = qObj.q;
+
+      let optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      qObj.options.sort(() => Math.random() - 0.5).forEach(opt => {
+        let btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt, qObj.a);
+        optionsDiv.appendChild(btn);
+      });
+
+      startTimer();
+    }
+
+    function startTimer() {
+      let time = timeLimit;
+      document.getElementById("timer").innerText = `Time Left: ${time}s`;
+      clearInterval(timer);
+      timer = setInterval(() => {
+        time--;
+        document.getElementById("timer").innerText = `Time Left: ${time}s`;
+        if (time <= 0) {
+          clearInterval(timer);
+          index++;
+          showQuestion();
+        }
+      }, 1000);
+    }
+
+    function checkAnswer(selected, correct) {
+      clearInterval(timer);
+      if (selected === correct) score += 2;
+      index++;
+      showQuestion();
+    }
+
+    function endQuiz() {
+      document.getElementById("quizArea").classList.add("hidden");
+      let resultText = score > 0
+        ? `🎉 Congratulations! Your score is ${score}`
+        : `❌ Please learn more about blood facts. Your score is ${score}`;
+      document.getElementById("result").innerText = resultText;
+      document.getElementById("result").classList.remove("hidden");
+      document.getElementById("levelSelect").classList.remove("hidden");
+    }
+  </script>
+ 
+</body>
+</html>

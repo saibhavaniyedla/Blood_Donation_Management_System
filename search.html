@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Donors</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Search Donors</h1>
+  </header>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="donors.html">Register as Donor</a>
+    <a href="request.html">Request Blood</a>
+    <a href="search.html">Search Donors</a>
+    <a href="quiz.html">Take Quiz</a>
+  </nav>
+
+  <section>
+    <h2>Find Donors</h2>
+    <form id="searchForm">
+  <select id="searchBlood" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option>
+        <option>A-</option>
+        <option>B+</option>
+        <option>B-</option>
+        <option>O+</option>
+        <option>O-</option>
+        <option>AB+</option>
+        <option>AB-</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+
+    <div id="results"></div>
+    <script>
+      document.getElementById('searchForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const blood_group = document.getElementById('searchBlood').value;
+        try {
+          const res = await fetch(`http://localhost:5000/donors/${blood_group}`);
+          const donors = await res.json();
+          const resultsDiv = document.getElementById('results');
+          if (!Array.isArray(donors)) {
+            resultsDiv.innerHTML = `<p style='color:red;'>❌ Error: ${donors.error || 'Server error. Please try again.'}</p>`;
+            return;
+          }
+          if (donors.length === 0) {
+            resultsDiv.innerHTML = '<p>❌ No donors found</p>';
+          } else {
+            let table = `<table border='1' style='width:100%;border-collapse:collapse;'>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Blood Group</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Last Donated</th>
+              </tr>`;
+            table += donors.map(d => `
+              <tr>
+                <td>${d.name}</td>
+                <td>${d.age}</td>
+                <td>${d.blood_group}</td>
+                <td>${d.phone}</td>
+                <td>${d.location}</td>
+                <td>${d.last_donated ? d.last_donated : 'Never'}</td>
+              </tr>`).join("");
+            table += "</table>";
+            resultsDiv.innerHTML = table;
+          }
+        } catch (err) {
+          document.getElementById('results').innerHTML = `<p style='color:red;'>❌ Network or server error.</p>`;
+        }
+      });
+    </script>
+  </section>
+
+  <footer>
+    <p>© 2025 Blood Donation System</p>
+  </footer>
+
+</body>
+</html>
